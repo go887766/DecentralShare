@@ -3,6 +3,9 @@ package com.decentralshare.app.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import com.decentralshare.app.blockchain.Block;
+import com.decentralshare.app.blockchain.Blockchain;
+import com.decentralshare.app.blockchain.Transaction;
 import com.decentralshare.app.crypto.CryptoManager;
 import com.decentralshare.app.model.Comment;
 import com.decentralshare.app.model.Post;
@@ -35,6 +38,7 @@ public class DataManager {
     private CryptoManager cryptoManager;
     private DistributedStorage storage;
     private P2PNetworkManager p2pManager;
+    private Blockchain blockchain;
     
     private DataManager(Context context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -42,6 +46,7 @@ public class DataManager {
         cryptoManager = CryptoManager.getInstance(context);
         storage = DistributedStorage.getInstance(context);
         p2pManager = P2PNetworkManager.getInstance(context);
+        blockchain = Blockchain.getInstance(context);
         loadData();
         initP2PCallback();
     }
@@ -156,6 +161,27 @@ public class DataManager {
         return storage;
     }
     
+    public Blockchain getBlockchain() {
+        return blockchain;
+    }
+    
+    // 挖矿方法
+    public boolean startMining() {
+        if (currentUser == null) {
+            return false;
+        }
+        
+        Block minedBlock = blockchain.minePendingTransactions(currentUser.getAddress());
+        if (minedBlock != null) {
+            // 更新用户金币（挖矿奖励）
+            currentUser.setCoins(currentUser.getCoins() + Blockchain.MINING_REWARD);
+            updateUser(currentUser);
+            return true;
+        }
+        
+        return false;
+    }
+    
     private void loadData() {
         String userJson = prefs.getString(KEY_USER, null);
         if (userJson != null) {
@@ -243,6 +269,10 @@ public class DataManager {
         post.setVideoUrls(videos != null ? videos : new ArrayList<>());
         posts.add(0, post);
         
+        // 区块链交易：发布帖子奖励
+        Transaction rewardTx = new Transaction("SYSTEM", currentUser.getAddress(), 10, "POST_REWARD", post.getId());
+        blockchain.addTransaction(rewardTx);
+        
         currentUser.setCoins(currentUser.getCoins() + 10);
         updateUser(currentUser);
         
@@ -278,6 +308,10 @@ public class DataManager {
             post.setLikes(post.getLikes() + 1);
             post.setLikedByMe(true);
             
+            // 区块链交易：点赞奖励
+            Transaction likeTx = new Transaction("SYSTEM", post.getAuthorAddress(), 1, "LIKE_REWARD", post.getId());
+            blockchain.addTransaction(likeTx);
+            
             User author = findUserByAddress(post.getAuthorAddress());
             if (author != null) {
                 author.setCoins(author.getCoins() + 1);
@@ -305,6 +339,10 @@ public class DataManager {
         );
         comment.setId(CryptoUtil.generateId());
         post.getComments().add(comment);
+        
+        // 区块链交易：评论奖励
+        Transaction commentTx = new Transaction("SYSTEM", currentUser.getAddress(), 2, "COMMENT_REWARD", post.getId());
+        blockchain.addTransaction(commentTx);
         
         currentUser.setCoins(currentUser.getCoins() + 2);
         updateUser(currentUser);
