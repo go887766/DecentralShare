@@ -129,16 +129,43 @@ app/
 ## 快速开始
 
 ### 环境要求
-- Android Studio Hedgehog (2023.1.1) 或更高版本
+- Android Studio Electric Eel (2022.1.1) 或更高版本
 - JDK 8 或更高版本
-- Android SDK API 34
+- Android SDK API 33 (建议)
+
+### 推送到 GitHub
+1. 在 GitHub 创建仓库 `DecentralShare`
+2. 在项目根目录执行：
+```bash
+# 添加远程仓库
+git remote add origin https://github.com/go887766/DecentralShare.git
+
+# 或者使用 token 认证
+git remote set-url origin "https://go887766:YOUR_TOKEN@github.com/go887766/DecentralShare.git"
+
+# 推送代码
+git push -u origin main
+```
+
+### 使用 Android Studio 构建 APK
+1. 使用 Android Studio 打开项目（等待 Gradle 同步完成）
+2. 菜单：Build -> Build Bundle(s) / APK(s) -> Build APK(s)
+3. 等待构建完成后，APK 文件位于：
+   - Debug APK：`app/build/outputs/apk/debug/app-debug.apk`
+4. 或者使用命令行：
+```bash
+# 构建 Debug APK
+./gradlew assembleDebug
+
+# 构建 Release APK
+./gradlew assembleRelease
+```
 
 ### 编译运行
-1. 克隆项目到本地
-2. 使用 Android Studio 打开项目
-3. 等待 Gradle 同步完成
-4. 连接 Android 设备或启动模拟器
-5. 点击 Run 按钮运行应用
+1. 使用 Android Studio 打开项目
+2. 等待 Gradle 同步完成
+3. 连接 Android 设备或启动模拟器
+4. 点击 Run 按钮运行应用
 
 ## 去中心化架构说明
 
