@@ -139,7 +139,7 @@ public class Blockchain {
         if (userCoins > 0) {
             mined = newBlock.mineBlockWithPoS(userCoins, totalCoins);
         } else {
-            mined = newBlock.mineBlock(DEFAULT_DIFFICULTY);
+            mined = newBlock.mineBlock(MIN_DIFFICULTY);
         }
         
         if (mined && newBlock.isValid()) {
