@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">DecentralShare</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="user_address">用户地址</string>
+    <string name="password">密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="share">分享</string>
+    <string name="user_center">用户中心</string>
+    <string name="home">首页</string>
+    <string name="my_posts">我的帖子</string>
+    <string name="coins">金币</string>
+    <string name="logout">退出登录</string>
+    <string name="publish_post">发布帖子</string>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
+    <string name="add_image">添加图片</string>
+    <string name="add_video">添加视频</string>
+    <string name="like">点赞</string>
+    <string name="comment">评论</string>
+    <string name="send">发送</string>
+    <string name="please_input">请输入</string>
+    <string name="login_success">登录成功</string>
+    <string name="register_success">注册成功</string>
+    <string name="share_success">分享成功</string>
+</resources>
