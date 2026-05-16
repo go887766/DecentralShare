@@ -3,7 +3,6 @@ package com.decentralshare.app.blockchain;
 import com.decentralshare.app.util.CryptoUtil;
 import java.io.Serializable;
 import java.security.MessageDigest;
-import java.util.Base64;
 
 public class Transaction implements Serializable {
     public String id;
