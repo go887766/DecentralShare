@@ -9,8 +9,8 @@ public class Transaction implements Serializable {
     public String fromAddress;
     public String toAddress;
     public long amount;
-    public String type; // "POST_REWARD", "COMMENT_REWARD", "LIKE_REWARD", "TRANSFER"
-    public String data; // 可选，附加数据
+    public String type;
+    public String data;
     public long timestamp;
     public String signature;
 
@@ -49,8 +49,6 @@ public class Transaction implements Serializable {
     }
 
     public void sign(String privateKey) {
-        // 使用私钥签名
-        // 简化实现
         this.signature = "SIGNED_" + calculateHash();
     }
 
