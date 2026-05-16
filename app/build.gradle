@@ -75,7 +75,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-nearby:19.1.0'
     
     // BouncyCastle for encryption
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
