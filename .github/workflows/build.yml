@@ -35,6 +35,10 @@ jobs:
     - name: Show gradlew version
       run: ./gradlew --version || true
 
+    - name: Generate debug keystore
+      run: |
+        keytool -genkey -v -keystore app/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Debug, OU=Debug, O=Debug, L=Debug, ST=Debug, C=US"
+
     - name: Clean project
       run: ./gradlew clean || true
 
