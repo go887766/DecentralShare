@@ -15,6 +15,7 @@ public class P2PNetworkManager {
     private Context context;
     private ConnectionsClient connectionsClient;
     private Map<String, Endpoint> connectedEndpoints;
+    private Map<String, String> pendingEndpointNames;
     private NetworkCallback callback;
     private String localEndpointId;
     private boolean isDiscovering;
@@ -32,6 +33,7 @@ public class P2PNetworkManager {
         this.context = context.getApplicationContext();
         this.connectionsClient = Nearby.getConnectionsClient(context);
         this.connectedEndpoints = new HashMap<>();
+        this.pendingEndpointNames = new HashMap<>();
         this.localEndpointId = DataManager.getInstance(context).getCurrentUser() != null ? 
             DataManager.getInstance(context).getCurrentUser().getAddress() : 
             UUID.randomUUID().toString();
@@ -165,19 +167,22 @@ public class P2PNetworkManager {
             @Override
             public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
                 Log.d(TAG, "Connection initiated with " + endpointId);
+                pendingEndpointNames.put(endpointId, connectionInfo.getEndpointName());
                 connectionsClient.acceptConnection(endpointId, payloadCallback);
             }
             
             @Override
             public void onConnectionResult(String endpointId, ConnectionResolution result) {
                 if (result.getStatus().isSuccess()) {
-                    Endpoint endpoint = new Endpoint(endpointId, 
-                        result.getConnectionInfo().getEndpointName());
+                    String endpointName = pendingEndpointNames.getOrDefault(endpointId, endpointId);
+                    Endpoint endpoint = new Endpoint(endpointId, endpointName);
                     connectedEndpoints.put(endpointId, endpoint);
+                    pendingEndpointNames.remove(endpointId);
                     Log.d(TAG, "Connected to " + endpointId);
                     if (callback != null) callback.onPeerConnected(endpointId);
                 } else {
                     Log.e(TAG, "Connection failed with " + endpointId);
+                    pendingEndpointNames.remove(endpointId);
                     if (callback != null) callback.onError("Connection failed");
                 }
             }
@@ -185,6 +190,7 @@ public class P2PNetworkManager {
             @Override
             public void onDisconnected(String endpointId) {
                 connectedEndpoints.remove(endpointId);
+                pendingEndpointNames.remove(endpointId);
                 Log.d(TAG, "Disconnected from " + endpointId);
                 if (callback != null) callback.onPeerDisconnected(endpointId);
             }
