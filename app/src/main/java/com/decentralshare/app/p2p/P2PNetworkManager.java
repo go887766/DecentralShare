@@ -34,9 +34,7 @@ public class P2PNetworkManager {
         this.connectionsClient = Nearby.getConnectionsClient(context);
         this.connectedEndpoints = new HashMap<>();
         this.pendingEndpointNames = new HashMap<>();
-        this.localEndpointId = DataManager.getInstance(context).getCurrentUser() != null ? 
-            DataManager.getInstance(context).getCurrentUser().getAddress() : 
-            UUID.randomUUID().toString();
+        this.localEndpointId = "device_" + UUID.randomUUID().toString().substring(0, 8);
     }
     
     public static synchronized P2PNetworkManager getInstance(Context context) {
